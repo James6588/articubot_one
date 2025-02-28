@@ -2,17 +2,13 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 
-
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessStart
-
 from launch_ros.actions import Node
-
-
 
 def generate_launch_description():
 
@@ -27,23 +23,6 @@ def generate_launch_description():
                     get_package_share_directory(package_name),'launch','rsp.launch.py'
                 )]), launch_arguments={'use_sim_time': 'false', 'use_ros2_control': 'true'}.items()
     )
-
-    # joystick = IncludeLaunchDescription(
-    #             PythonLaunchDescriptionSource([os.path.join(
-    #                 get_package_share_directory(package_name),'launch','joystick.launch.py'
-    #             )])
-    # )
-
-
-    #twist_mux_params = os.path.join(get_package_share_directory(package_name),'config','twist_mux.yaml')
-    #twist_mux = Node(
-    #        package="twist_mux",
-    #        executable="twist_mux",
-    #        parameters=[twist_mux_params],
-    #        remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
-    #    )
-
-    
 
 
     robot_description = Command(['ros2 param get --hide-type /robot_state_publisher robot_description'])
@@ -85,31 +64,25 @@ def generate_launch_description():
         )
     )
 
-
-    # Code for delaying a node (I haven't tested how effective it is)
-    # 
-    # First add the below lines to imports
-    # from launch.actions import RegisterEventHandler
-    # from launch.event_handlers import OnProcessExit
-    #
-    # Then add the following below the current diff_drive_spawner
-    # delayed_diff_drive_spawner = RegisterEventHandler(
-    #     event_handler=OnProcessExit(
-    #         target_action=spawn_entity,
-    #         on_exit=[diff_drive_spawner],
-    #     )
-    # )
-    #
-    # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
-
+    camera_spawner = Node(
+        package="v4l2_camera",
+        executable="v4l2_camera_node",
+        output='screen',
+        parameters=[{
+            'image_size': [640,480],
+            'time_per_frame': [1, 6],
+            'auto_exposure': 1,
+            'exposure_time_absolute': 305,
+            'camera_frame_id': 'camera_link_optical'
+            }]
+    )
 
 
     # Launch them all!
     return LaunchDescription([
         rsp,
-        # joystick,
-        #twist_mux,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
-        delayed_joint_broad_spawner
+        delayed_joint_broad_spawner,
+        camera_spawner,
     ])

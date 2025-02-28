@@ -3,19 +3,19 @@
 
     <xacro:include filename="inertial_macros.xacro"/>
 
-    <xacro:property name="chassis_length" value="0.16"/>
-    <xacro:property name="chassis_width" value="0.144"/>
+    <xacro:property name="chassis_length" value="0.17"/>
+    <xacro:property name="chassis_width" value="0.145"/>
     <xacro:property name="chassis_height" value="0.063"/>
-    <xacro:property name="chassis_mass" value="3.0"/>
-    <xacro:property name="wheel_radius" value="0.049"/>
-    <xacro:property name="wheel_thickness" value="0.013"/>
+    <xacro:property name="chassis_mass" value="1.0"/>
+    <xacro:property name="wheel_radius" value="0.05"/>
+    <xacro:property name="wheel_thickness" value="0.014"/>
     <xacro:property name="wheel_mass" value="0.05"/>
-    <xacro:property name="wheel_offset_x" value="0.03"/>
-    <xacro:property name="wheel_offset_y" value="0.082"/>
+    <xacro:property name="wheel_offset_x" value="0.035"/>
+    <xacro:property name="wheel_offset_y" value="0.085"/>
     <xacro:property name="wheel_offset_z" value="0.028"/>
     <xacro:property name="caster_wheel_radius" value="0.01"/>
     <xacro:property name="caster_wheel_mass" value="0.01"/>
-    <xacro:property name="caster_wheel_offset_x" value="0.14"/>
+    <xacro:property name="caster_wheel_offset_x" value="0.135"/>
     <xacro:property name="caster_wheel_offset_z" value="${wheel_offset_z - wheel_radius + caster_wheel_radius}"/>
 
     <material name="white">
@@ -105,7 +105,7 @@
         </visual>
         <collision>
             <geometry>
-                <sphere radius="${wheel_radius}"/>
+                <cylinder radius="${wheel_radius}" length="${wheel_thickness}"/>
             </geometry>
         </collision>
         <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_thickness}" radius="${wheel_radius}">
@@ -136,7 +136,7 @@
         </visual>
         <collision>
             <geometry>
-                <sphere radius="${wheel_radius}"/>
+                <cylinder radius="${wheel_radius}" length="${wheel_thickness}"/>
             </geometry>
         </collision>
         <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_thickness}" radius="${wheel_radius}">
